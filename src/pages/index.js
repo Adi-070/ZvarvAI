@@ -162,7 +162,7 @@ export default function LandingPage() {
               Get in Touch
             </h2>
             <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl text-center mb-12">
-              Ready to start your journey with CharacterChat? We're here to help!
+              Ready to start your journey with Zvarv AI? We&apos;re here to help!
             </p>
             <div className="flex justify-center">
               <Button className="bg-purple-600 hover:bg-purple-700 transition-all duration-300 hover:scale-105">
@@ -174,7 +174,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-purple-100 bg-white">
-        <p className="text-xs text-gray-600">© 2024 CharacterChat. All rights reserved.</p>
+        <p className="text-xs text-gray-600">© 2024 Zvarv AI. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:text-purple-600 transition-colors" href="#">
             Terms of Service
