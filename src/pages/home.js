@@ -9,7 +9,7 @@ import { ChatMessage } from "../components/ChatMessage";
 import { ChatInput } from "../components/ChatInput";
 import { GreetingMessage } from "../components/GreetingMessage";
 import { useRouter } from 'next/router';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from "../../lib/supabase";
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState("movies-tv");
@@ -18,37 +18,52 @@ export default function Home() {
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Add this useEffect to fetch user data
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser()
-        
-        if (error) {
-          console.error('Error fetching user:', error.message)
-          return
-        }
-        
-        console.log('User data:', user)
-        setUser(user)
-      } catch (error) {
-        console.error('Unexpected error:', error)
+    // Check active session
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession()
+      if (error) {
+        console.error('Error checking session:', error.message)
+        router.push('/login')
+        return
       }
+      
+      if (!session) {
+        router.push('/login')
+        return
+      }
+      console.log(user?.user_metadata);
+
+      setUser(session.user)
     }
 
-    getUser()
-  }, [])
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        router.push('/login')
+      } else if (session) {
+        setUser(session.user)
+      }
+    })
+
+    checkSession()
+
+    return () => {
+      subscription?.unsubscribe()
+    }
+  }, [router])
 
 
-  const router = useRouter();
-  const supabase = createClientComponentClient({
-    supabaseUrl: 'https://bwxugttvebmtnutakndc.supabase.co',
-    supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eHVndHR2ZWJtdG51dGFrbmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MzIyODUsImV4cCI6MjA0ODEwODI4NX0.2_IIETIigqUg1CA-qXu4fkAT1yuyUWPwrftHYMC_Nds"
-  });
+ 
+  // const supabase = createClientComponentClient({
+  //   supabaseUrl: 'https://bwxugttvebmtnutakndc.supabase.co',
+  //   supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eHVndHR2ZWJtdG51dGFrbmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MzIyODUsImV4cCI6MjA0ODEwODI4NX0.2_IIETIigqUg1CA-qXu4fkAT1yuyUWPwrftHYMC_Nds"
+  // });
 
   const handleLogout = async () => {
     try {
@@ -124,9 +139,9 @@ export default function Home() {
       onClick={() => setShowDropdown(!showDropdown)}
       className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-600 focus:outline-none focus:border-purple-700"
     >
-      {user?.user_metadata?.avatar_url ? (
+      {user?.user_metadata?.picture ? (
         <img
-          src={user.user_metadata.avatar_url}
+          src={user.user_metadata.picture}
           alt="Profile"
           width={40}
           height={40}
