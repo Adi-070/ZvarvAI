@@ -39,7 +39,7 @@ export default function Home() {
         console.error('Unexpected error:', error)
       }
     }
-    
+
     getUser()
   }, [])
 
@@ -125,7 +125,7 @@ export default function Home() {
       className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-600 focus:outline-none focus:border-purple-700"
     >
       {user?.user_metadata?.avatar_url ? (
-        <Image
+        <img
           src={user.user_metadata.avatar_url}
           alt="Profile"
           width={40}
