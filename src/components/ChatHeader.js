@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { Button } from "@/components/ui/button";
 
 export const ChatHeader = ({ bot, onBack }) => (
-  <Card className={`bg-gradient-to-r ${bot.accentColor}`}>
+    <Card className={`bg-gradient-to-r ${bot.accentColor}`}>
     <CardHeader className="flex flex-row items-center justify-between text-white p-3 sm:p-6">
       <div className="flex items-center space-x-2 sm:space-x-4">
         <img 
