@@ -8,6 +8,8 @@ import { ChatHeader } from "../components/ChatHeader";
 import { ChatMessage } from "../components/ChatMessage";
 import { ChatInput } from "../components/ChatInput";
 import { GreetingMessage } from "../components/GreetingMessage";
+import { useRouter } from 'next/router';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState("movies-tv");
@@ -15,6 +17,23 @@ export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+
+
+  const router = useRouter();
+  const supabase = createClientComponentClient({
+    supabaseUrl: 'https://bwxugttvebmtnutakndc.supabase.co',
+    supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eHVndHR2ZWJtdG51dGFrbmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MzIyODUsImV4cCI6MjA0ODEwODI4NX0.2_IIETIigqUg1CA-qXu4fkAT1yuyUWPwrftHYMC_Nds"
+  });
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.push('/login');
+    } catch (error) {
+      console.error('Error logging out:', error.message);
+    }
+  };
 
   const handleBotSelect = (bot) => {
     setSelectedBot(bot);
@@ -74,6 +93,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-purple-900 p-3 sm:p-6">
+       <button
+        onClick={handleLogout}
+        className="fixed top-4 right-4 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+      >
+        Logout
+      </button>
       <div className="max-w-7xl mx-auto">
         {!selectedBot ? (
           <div className="space-y-4 sm:space-y-6">
