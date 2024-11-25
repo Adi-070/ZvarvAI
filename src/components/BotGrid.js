@@ -20,3 +20,4 @@ export const BotGrid = ({ selectedGenre, onBotSelect }) => (
     )}
   </div>
 );
+
