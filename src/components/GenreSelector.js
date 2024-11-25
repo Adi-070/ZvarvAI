@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { genres } from "../data/constants";
 
 export const GenreSelector = ({ selectedGenre, onGenreChange }) => (
-  <Card className="bg-white/50 backdrop-blur-sm outline outline-2 outline-black shadow-md">
+  <Card className="bg-white/50 backdrop-blur-sm outline outline-2 outline-black shadow-md relative z-0">
     <CardHeader className="p-4 sm:p-6">
       <CardTitle className="text-lg sm:text-2xl">Choose Your Companion</CardTitle>
       <CardDescription className="text-sm sm:text-base">

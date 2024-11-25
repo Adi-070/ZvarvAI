@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { GenreSelector } from "../components/GenreSelector";
 import { BotGrid } from "../components/BotGrid";
@@ -17,6 +17,31 @@ export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+
+
+  const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  // Add this useEffect to fetch user data
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        
+        if (error) {
+          console.error('Error fetching user:', error.message)
+          return
+        }
+        
+        console.log('User data:', user)
+        setUser(user)
+      } catch (error) {
+        console.error('Unexpected error:', error)
+      }
+    }
+    
+    getUser()
+  }, [])
 
 
   const router = useRouter();
@@ -93,12 +118,40 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-purple-900 p-3 sm:p-6">
-       <button
-        onClick={handleLogout}
-        className="fixed top-4 right-4 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-      >
-        Logout
-      </button>
+      <div className="absolute top-2 right-2 sm:fixed sm:top-4 sm:right-4 z-10">
+  <div className="relative">
+    <button
+      onClick={() => setShowDropdown(!showDropdown)}
+      className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-600 focus:outline-none focus:border-purple-700"
+    >
+      {user?.user_metadata?.avatar_url ? (
+        <Image
+          src={user.user_metadata.avatar_url}
+          alt="Profile"
+          width={40}
+          height={40}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full bg-purple-600 flex items-center justify-center text-white">
+          {user?.email?.[0]?.toUpperCase() || '?'}
+        </div>
+      )}
+    </button>
+
+    {showDropdown && (
+      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1">
+        <button
+          onClick={handleLogout}
+          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
       <div className="max-w-7xl mx-auto">
         {!selectedBot ? (
           <div className="space-y-4 sm:space-y-6">
@@ -132,6 +185,7 @@ export default function Home() {
                   />
                 ))}
               </AnimatePresence>
+              
             </div>
 
             <ChatInput 
