@@ -26,6 +26,7 @@ export default function Home() {
   useEffect(() => {
     // Check active session
     const checkSession = async () => {
+    try {
       const { data: { session }, error } = await supabase.auth.getSession()
       if (error) {
         console.error('Error checking session:', error.message)
@@ -40,6 +41,9 @@ export default function Home() {
       console.log(user?.user_metadata);
 
       setUser(session.user)
+    } finally {
+      setLoading(false)
+      }
     }
 
     // Subscribe to auth changes
@@ -58,12 +62,6 @@ export default function Home() {
     }
   }, [router])
 
-
- 
-  // const supabase = createClientComponentClient({
-  //   supabaseUrl: 'https://bwxugttvebmtnutakndc.supabase.co',
-  //   supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3eHVndHR2ZWJtdG51dGFrbmRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1MzIyODUsImV4cCI6MjA0ODEwODI4NX0.2_IIETIigqUg1CA-qXu4fkAT1yuyUWPwrftHYMC_Nds"
-  // });
 
   const handleLogout = async () => {
     try {
@@ -130,6 +128,7 @@ export default function Home() {
     setSelectedBot(null);
     setChatHistory([]);
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-purple-900 p-3 sm:p-6">
