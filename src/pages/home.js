@@ -10,6 +10,8 @@ import { ChatInput } from "../components/ChatInput";
 import { GreetingMessage } from "../components/GreetingMessage";
 import { useRouter } from 'next/router';
 import { supabase } from "../../lib/supabase";
+import { PlusCircle } from 'lucide-react'; 
+import Link from "next/link";
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState("movies-tv");
@@ -173,6 +175,13 @@ export default function Home() {
               selectedGenre={selectedGenre} 
               onGenreChange={setSelectedGenre} 
             />
+              <Link 
+                href="/create-bot"
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <PlusCircle size={20} />
+                <span>Create Bot</span>
+              </Link>
             <BotGrid 
               selectedGenre={selectedGenre} 
               onBotSelect={handleBotSelect} 

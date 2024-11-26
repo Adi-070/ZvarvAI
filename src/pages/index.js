@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Film, Music, Dumbbell, ArrowRight, Heart, Star, MessageCircle, Sparkles } from "lucide-react";
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function LandingPage() {
   const container = {
