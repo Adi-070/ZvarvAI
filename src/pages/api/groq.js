@@ -1,7 +1,8 @@
 import Groq from "groq-sdk";
+import { supabase } from "../../../lib/supabase";
 
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: "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",
 });
 
 const botPersonalities = {
@@ -18,20 +19,45 @@ export default async function handler(req, res) {
 
   const { prompt, bot } = req.body;
 
-  const normalizedBot = bot.replace(/\s+/g, ""); // Remove spaces
-  const systemMessage = botPersonalities[normalizedBot] || "You are a helpful assistant.";
-  
+  console.log('Received prompt:', prompt);
+  console.log('Received bot ID:', bot);
+
+  // Normalize the bot ID
+  const normalizedBot = bot.replace(/\s+/g, "").toLowerCase(); // Remove spaces and convert to lowercase
+
+  // Determine system message and user prompt
+  let systemMessage;
+  let userPrompt;
+
+  // Check if the bot is a hardcoded bot
+  if (botPersonalities[normalizedBot]) {
+    systemMessage = botPersonalities[normalizedBot];
+    userPrompt = prompt;
+  } else {
+    // For custom bots, use description as system message
+    const customBot = await supabase
+      .from('custom_bots')
+      .select('description')
+      .eq('id', bot)
+      .single();
+
+    console.log('Custom bot response:', customBot);
+
+    systemMessage = customBot.data?.description || "You are a helpful assistant.";
+    userPrompt = "Continue our conversation.";
+  }
+
   try {
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         { role: "system", content: systemMessage },
-        { role: "user", content: prompt },
+        { role: "user", content: userPrompt },
       ],
       model: "llama3-8b-8192",
       temperature: 0.5,
       max_tokens: 256,
     });
-
+// console.log(chatCompletion.choices[1]?.message?.content)
     const response = chatCompletion.choices[0]?.message?.content || "";
     res.status(200).json({ response });
   } catch (error) {

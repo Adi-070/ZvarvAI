@@ -21,9 +21,15 @@ export const BotCard = ({ bot, onClick }) => (
         <CardTitle className="text-center text-base sm:text-lg">{bot.name}</CardTitle>
       </CardHeader>
       <CardContent className="p-3 sm:p-6">
-        <CardDescription className="text-center text-sm sm:text-base">
-          {bot.description}
-        </CardDescription>
+      <CardDescription className="text-xs text-center sm:text-sm">
+  {bot.desc ? (
+    bot.desc
+  ) : (
+    <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-purple-500 rounded">
+      Custom
+    </span>
+  )}
+</CardDescription>
       </CardContent>
     </Card>
   </motion.div>

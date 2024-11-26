@@ -83,21 +83,39 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim() || !selectedBot) return;
-
+  
     setLoading(true);
     const userMessage = prompt;
     setPrompt("");
-
+  
     try {
       const res = await fetch("/api/groq", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userMessage, bot: selectedBot.id }),
+        body: JSON.stringify({ 
+          prompt: userMessage, 
+          bot: selectedBot.id 
+        }),
       });
-
-      if (!res.ok) throw new Error('Failed to fetch response from API');
-
-      const data = await res.json();
+  
+      // Log the full response for debugging
+      const responseText = await res.text();
+      console.log('API Response:', res);
+  
+      // Check if the response is not OK
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}, response: ${responseText}`);
+      }
+  
+      // Parse the JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        throw new Error('Failed to parse API response');
+      }
+  
       const botResponse = data.response || "No response from the bot.";
       
       setChatHistory(prev => [...prev, 
@@ -105,10 +123,14 @@ export default function Home() {
         { type: 'bot', content: botResponse }
       ]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Detailed Error:", error);
+      
+      // More detailed error message
+      const errorMessage = error.message || "An unexpected error occurred";
+      
       setChatHistory(prev => [...prev,
         { type: 'user', content: userMessage },
-        { type: 'bot', content: "An error occurred while processing your request." }
+        { type: 'bot', content: `Error: ${errorMessage}` }
       ]);
     } finally {
       setLoading(false);
