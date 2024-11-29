@@ -14,7 +14,7 @@ export const ChatHeader = ({ bot, onBack }) => (
         <div>
           <CardTitle className="text-base sm:text-lg">{bot.name}</CardTitle>
           <CardDescription className="text-gray-100 text-xs sm:text-sm">
-            {bot.desc}
+            {bot.descc}
           </CardDescription>
         </div>
       </div>

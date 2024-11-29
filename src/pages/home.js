@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { supabase } from "../../lib/supabase";
 import { PlusCircle } from 'lucide-react'; 
 import Link from "next/link";
+import { botsByGenre } from "@/data/constants";
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState("movies-tv");
@@ -75,10 +76,31 @@ export default function Home() {
     }
   };
 
-  const handleBotSelect = (bot) => {
-    setSelectedBot(bot);
-    setChatHistory([{ type: 'bot', content: bot.greeting }]);
+  const handleBotSelect = async (bot) => {
+    // try {
+    //   // Check if the bot is from the predefined_bots table
+    //   const { data: predefinedBot, error: predefinedBotError } = await supabase
+    //     .from('predefined_bots')
+    //     .select('id')
+    //     .eq('id', bot.id)
+    //     .single();
+  
+    //   if (predefinedBot && !predefinedBotError) {
+    //     // It's a predefined bot
+    //     setSelectedBot(bot);
+    //     setChatHistory([{ type: 'bot', content: bot.greeting}]);
+    //     router.push(`/home/${bot.id}`);
+    //   } else {
+    //     // If not predefined, assume it's a custom bot
+    //     router.push(`/home/${bot.id}`);
+    //   }
+    // } catch (error) {
+    //   console.error("Error selecting bot:", error);
+    //   alert("Unable to load bot. Please try again.");
+    // }
+    router.push(`/home/${bot.id}`);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -190,58 +212,25 @@ export default function Home() {
   </div>
 </div>
 
-      <div className="max-w-7xl mx-auto">
-        {!selectedBot ? (
-          <div className="space-y-4 sm:space-y-6">
-            <GenreSelector 
-              selectedGenre={selectedGenre} 
-              onGenreChange={setSelectedGenre} 
-            />
-              <Link 
-                href="/create-bot"
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                <PlusCircle size={20} />
-                <span>Create Bot</span>
-              </Link>
-            <BotGrid 
-              selectedGenre={selectedGenre} 
-              onBotSelect={handleBotSelect} 
-            />
-          </div>
-        ) : (
-          <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
-            <ChatHeader bot={selectedBot} onBack={handleBack} />
-            
-            <div className="space-y-4">
-              <AnimatePresence>
-                {chatHistory.length > 0 && (
-                  <GreetingMessage 
-                    content={chatHistory[0].content}
-                    botName={selectedBot.name}
-                  />
-                )}
-                {getMessagePairs().map((pair, index) => (
-                  <ChatMessage 
-                    key={index}
-                    userMessage={pair.userMessage}
-                    botMessage={pair.botMessage}
-                    botName={selectedBot.name}
-                  />
-                ))}
-              </AnimatePresence>
-              
-            </div>
-
-            <ChatInput 
-              prompt={prompt}
-              onPromptChange={setPrompt}
-              onSubmit={handleSubmit}
-              loading={loading}
-            />
-          </div>
-        )}
-      </div>
+<div className="max-w-7xl mx-auto">
+  <div className="space-y-4 sm:space-y-6">
+    <GenreSelector 
+      selectedGenre={selectedGenre} 
+      onGenreChange={setSelectedGenre} 
+    />
+    <Link 
+      href="/create-bot"
+      className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+    >
+      <PlusCircle size={20} />
+      <span>Create Bot</span>
+    </Link>
+    <BotGrid 
+      selectedGenre={selectedGenre} 
+      onBotSelect={handleBotSelect} 
+    />
+  </div>
+</div>
     </div>
   );
 }

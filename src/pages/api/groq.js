@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     console.log('Custom bot response:', customBot);
 
     systemMessage = customBot.data?.description || "You are a helpful assistant.";
-    userPrompt = "Continue our conversation.";
+    userPrompt = prompt;
   }
 
   try {

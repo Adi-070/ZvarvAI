@@ -22,8 +22,8 @@ export const BotCard = ({ bot, onClick }) => (
       </CardHeader>
       <CardContent className="p-3 sm:p-6">
       <CardDescription className="text-xs text-center sm:text-sm">
-  {bot.desc ? (
-    bot.desc
+  {bot.descc ? (
+    bot.descc
   ) : (
     <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-purple-500 rounded">
       Custom
