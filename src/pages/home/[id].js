@@ -10,6 +10,9 @@ import { ChatInput } from "../../components/ChatInput";
 import { GreetingMessage } from "../../components/GreetingMessage";
 import Link from "next/link";
 import { PlusCircle, ArrowLeft } from 'lucide-react';
+import { Loader2 } from "lucide-react"
+import { motion } from "framer-motion"
+import { Card, CardContent } from "@/components/ui/card"
 
 
 export default function BotDetailPage() {
@@ -25,7 +28,7 @@ export default function BotDetailPage() {
   useEffect(() => {
     const fetchBotDetails = async () => {
       if (!id) return;
-  
+    
       try {
         // First check if it's a predefined bot
         const { data: predefinedBot, error: predefinedBotError } = await supabase
@@ -69,6 +72,8 @@ export default function BotDetailPage() {
     setLoading(true);
     const userMessage = prompt;
     setPrompt("");
+
+
   
     try {
       const res = await fetch("/api/groq", {
@@ -111,6 +116,7 @@ export default function BotDetailPage() {
         { type: 'bot', content: `Error: ${errorMessage}` }
       ]);
     } finally {
+      
       setLoading(false);
     }
   };
@@ -130,7 +136,76 @@ export default function BotDetailPage() {
     router.push('/home');
   };
 
-  if (!bot) return <div>Loading...</div>;
+
+
+if (!bot) return (
+  <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+    <Card className="w-full max-w-md">
+      <CardContent className="pt-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ 
+            duration: 0.5,
+            type: "spring",
+            bounce: 0.4
+          }}
+          className="flex flex-col items-center space-y-6"
+        >
+          <motion.div
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut"
+            }}
+            className="relative"
+          >
+            <div className="absolute -inset-2 bg-primary/10 rounded-full animate-pulse"></div>
+            <div className="relative z-10 bg-primary/20 p-4 rounded-full">
+              <Loader2 
+                className="w-16 h-16 text-purple-500 animate-spin" 
+                strokeWidth={1.5} 
+              />
+            </div>
+          </motion.div>
+          
+       
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ 
+              delay: 0.6,
+              duration: 0.5 
+            }}
+            className="flex space-x-2"
+          >
+            {[1, 2, 3].map((dot) => (
+              <motion.div
+                key={dot}
+                animate={{
+                  y: [0, -10, 0],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  delay: dot * 0.2
+                }}
+                className="w-3 h-3 bg-primary/50 rounded-full"
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+      </CardContent>
+    </Card>
+  </div>
+);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-purple-900 p-3 sm:p-6">
