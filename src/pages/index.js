@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Film, Music, Dumbbell, ArrowRight, Heart, Star, MessageCircle, Sparkles } from "lucide-react";
 import 'react-toastify/dist/ReactToastify.css'
+import PricingSection from "@/components/PricingSection";
 
 export default function LandingPage() {
   const container = {
@@ -52,7 +53,7 @@ export default function LandingPage() {
       ) : (
         <Link
           key={menu}
-          className="text-sm font-medium hover:text-purple-600 transition-colors"
+          className="text-sm font-medium text-black hover:text-purple-600 transition-colors"
           href={`${menu.toLowerCase()}`}
         >
           {menu}
@@ -175,7 +176,8 @@ export default function LandingPage() {
             </div>
           </div>
         </motion.section>
-
+        
+      <PricingSection/>
         {/* Contact Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}

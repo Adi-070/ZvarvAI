@@ -89,6 +89,7 @@ export default function BotDetailPage() {
       console.log('API Response:', res);
   
       if (!res.ok) {
+        console.log(responseText);
         throw new Error(`HTTP error! status: ${res.status}, response: ${responseText}`);
       }
   

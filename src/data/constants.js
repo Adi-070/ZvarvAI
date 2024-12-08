@@ -51,7 +51,16 @@ export const genres = [
         avatar: "/characters/sherlock.jpg",
         accentColor: "from-blue-500 to-blue-700",
         greeting: "Elementary, my dear friend. What case shall we solve today?"
+      },
+      {
+        id: "elizabeth",
+        name: "Elizabeth Bennet",
+        descc: "Independent and witty protagonist from 'Pride and Prejudice'",
+        avatar: "/characters/elizabeth.jpg",
+        accentColor: "from-pink-500 to-pink-700",
+        greeting: "Good day. Shall we discuss matters of wit, wisdom, or love?"
       }
+      
     ],
     "historical": []
   };
